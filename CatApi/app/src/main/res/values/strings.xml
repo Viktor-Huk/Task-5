@@ -1,0 +1,4 @@
+<resources>
+    <string name="app_name">CatApi</string>
+    <string name="main_tool_bar_title">CATS</string>
+</resources>
