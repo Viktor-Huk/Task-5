@@ -2,19 +2,12 @@ package com.example.catapi.ui
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.catapi.databinding.ActivityMainBinding
-import com.example.catapi.db.entity.CatEntity
-import com.example.catapi.model.Cat
-import com.example.catapi.network.NetworkService
-import com.example.catapi.repository.CatsRepository
 import com.example.catapi.ui.adapter.CatAdapter
 import com.example.catapi.ui.viewModel.MainViewModel
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
 
 class MainActivity : AppCompatActivity() {
 
@@ -32,7 +25,7 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = catAdapter
 
-        viewModel.data?.observe(this, Observer {
+        viewModel.getCats().observe(this, Observer {
             catAdapter.addItems(it)
         })
     }

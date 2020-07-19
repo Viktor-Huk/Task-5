@@ -22,7 +22,7 @@ class CatAdapter : RecyclerView.Adapter<CatViewHolder>() {
     }
 
     override fun onBindViewHolder(holder: CatViewHolder, position: Int) {
-        val url = items[position].imageUrl
+        val url = items[position].url
         holder.bind(url)
     }
 

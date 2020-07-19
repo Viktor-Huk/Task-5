@@ -13,6 +13,6 @@ interface CatDao {
     @Query("SELECT * FROM cats_table")
     fun getAllCats(): LiveData<List<Cat>>
 
-    @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addCats(listOfCats: List<Cat>?)
+    @Insert(onConflict = OnConflictStrategy.IGNORE)
+    fun addCats(listOfCats: Cat)
 }

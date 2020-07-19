@@ -9,7 +9,7 @@ import com.example.catapi.R
 class CatViewHolder(view: View): RecyclerView.ViewHolder(view) {
     var catImageView = view.findViewById<ImageView>(R.id.catImageView)
 
-    fun bind(url: String?) {
+    fun bind(url: String) {
         catImageView.load(url)
     }
 }
