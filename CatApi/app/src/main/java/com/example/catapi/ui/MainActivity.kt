@@ -1,13 +1,13 @@
 package com.example.catapi.ui
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.example.catapi.databinding.ActivityMainBinding
 import com.example.catapi.ui.adapter.CatAdapter
-import com.example.catapi.ui.viewModel.MainViewModel
+
 
 class MainActivity : AppCompatActivity() {
 
@@ -25,8 +25,15 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = catAdapter
 
-        viewModel.getCats().observe(this, Observer {
-            catAdapter.addItems(it)
+        viewModel.cats().observe(this, Observer {
+            catAdapter.refresh(it)
+        })
+
+        catAdapter.setOnLoadMoreListener(object  : CatAdapter.OnLoadMoreListener {
+            override fun onLoadMore() {
+                viewModel.refresh()
+                catAdapter.endLoading()
+            }
         })
     }
 }

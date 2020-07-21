@@ -1,4 +1,4 @@
-package com.example.catapi.network
+package com.example.catapi.repository.network
 
 import com.example.catapi.model.Cat
 import retrofit2.http.GET

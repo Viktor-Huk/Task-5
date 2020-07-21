@@ -1,4 +1,4 @@
-package com.example.catapi.db
+package com.example.catapi.repository.db
 
 import android.content.Context
 import androidx.room.Room
