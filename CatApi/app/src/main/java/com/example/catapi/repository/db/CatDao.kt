@@ -4,14 +4,14 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.example.catapi.model.Cat
+import com.example.catapi.repository.db.entity.CatEntity
 
 @Dao
 interface CatDao {
 
     @Query("SELECT * FROM cats_table")
-    fun getAllCats(): List<Cat>
+    suspend fun getAllCats(): List<CatEntity>
 
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun addCat(cat: List<Cat>)
+    fun addCats(cats: List<CatEntity>)
 }

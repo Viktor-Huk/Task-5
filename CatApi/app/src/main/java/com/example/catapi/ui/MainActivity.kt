@@ -1,6 +1,7 @@
 package com.example.catapi.ui
 
 import android.os.Bundle
+import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -26,14 +27,8 @@ class MainActivity : AppCompatActivity() {
         recyclerView.adapter = catAdapter
 
         viewModel.cats().observe(this, Observer {
-            catAdapter.refresh(it)
-        })
-
-        catAdapter.setOnLoadMoreListener(object  : CatAdapter.OnLoadMoreListener {
-            override fun onLoadMore() {
-                viewModel.refresh()
-                catAdapter.endLoading()
-            }
+            Log.i("tag", "observe")
+            catAdapter.submitList(it)
         })
     }
 }

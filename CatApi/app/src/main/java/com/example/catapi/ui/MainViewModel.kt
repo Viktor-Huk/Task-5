@@ -1,27 +1,26 @@
 package com.example.catapi.ui
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.example.catapi.model.Cat
+import com.example.catapi.repository.CatsRepository
 import com.example.catapi.repository.network.NetworkService
 import kotlinx.coroutines.launch
 
-class MainViewModel(application: Application) : AndroidViewModel(application) {
+class MainViewModel : ViewModel() {
 
-    private var _cats = MutableLiveData<List<Cat>>()
+    private val catsRepository = CatsRepository()
+    private var _cats = MutableLiveData<MutableList<Cat>>()
 
-    init {
-        refresh()
+    fun cats(): LiveData<MutableList<Cat>> {
+        if (_cats.value.isNullOrEmpty()) {
+            loadCats()
+        }
+        return _cats
     }
 
-    fun cats(): LiveData<List<Cat>> = _cats
-
-    fun refresh() {
+    fun loadCats() {
         viewModelScope.launch {
-            _cats.value = NetworkService.getCatApi().getCats()
+            _cats.value?.addAll(catsRepository.getCats())
         }
     }
 }
