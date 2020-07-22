@@ -3,24 +3,26 @@ package com.example.catapi.ui
 import androidx.lifecycle.*
 import com.example.catapi.model.Cat
 import com.example.catapi.repository.CatsRepository
-import com.example.catapi.repository.network.NetworkService
 import kotlinx.coroutines.launch
 
 class MainViewModel : ViewModel() {
 
     private val catsRepository = CatsRepository()
-    private var _cats = MutableLiveData<MutableList<Cat>>()
+    private val _data = MutableLiveData<List<Cat>>()
 
-    fun cats(): LiveData<MutableList<Cat>> {
-        if (_cats.value.isNullOrEmpty()) {
-            loadCats()
+    val data: LiveData<List<Cat>> = _data
+
+    fun getCats() {
+        viewModelScope.launch {
+            val cats = catsRepository.getCats()
+            _data.value = cats
         }
-        return _cats
     }
 
     fun loadCats() {
         viewModelScope.launch {
-            _cats.value?.addAll(catsRepository.getCats())
+            catsRepository.loadCatsFromServer()
+            getCats()
         }
     }
 }

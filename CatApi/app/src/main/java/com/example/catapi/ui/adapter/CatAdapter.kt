@@ -8,7 +8,7 @@ import com.example.catapi.R
 import com.example.catapi.model.Cat
 
 
-class CatAdapter : ListAdapter<Cat, CatViewHolder>(catDiffUtilCallback) {
+class CatAdapter(private val itemClickListener: ItemClickListener) : ListAdapter<Cat, CatViewHolder>(catDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -20,6 +20,10 @@ class CatAdapter : ListAdapter<Cat, CatViewHolder>(catDiffUtilCallback) {
     override fun onBindViewHolder(holder: CatViewHolder, position: Int) {
         val cat = getItem(position)
         holder.bind(cat)
+
+        holder.catImageView.setOnClickListener {
+            itemClickListener.onItemClick(position)
+        }
     }
 
     companion object {
@@ -37,5 +41,9 @@ class CatAdapter : ListAdapter<Cat, CatViewHolder>(catDiffUtilCallback) {
         }
     }
 
-
+    interface ItemClickListener {
+        fun onItemClick(position: Int)
+    }
 }
+
+

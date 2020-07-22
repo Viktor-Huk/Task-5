@@ -9,7 +9,6 @@ import com.example.catapi.model.Cat
 data class CatEntity(
 
     @PrimaryKey
-    @ColumnInfo(name = "id")
     val id: String,
 
     @ColumnInfo(name = "url")
