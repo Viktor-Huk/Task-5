@@ -34,7 +34,6 @@ class ShowImageActivity : AppCompatActivity() {
         viewModel.loadImage(url)
     }
 
-
     override fun onRequestPermissionsResult(
         requestCode: Int,
         permissions: Array<out String>,
@@ -82,7 +81,6 @@ class ShowImageActivity : AppCompatActivity() {
                 } else {
                     Log.i("tag", "save")
                     viewModel.saveImage(catId)
-
                 }
                 return true
             }
@@ -107,7 +105,6 @@ class ShowImageActivity : AppCompatActivity() {
 
                 Log.i("tag", "request")
             }
-
         }
     }
 

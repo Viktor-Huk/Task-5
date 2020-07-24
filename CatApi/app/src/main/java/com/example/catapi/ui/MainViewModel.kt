@@ -1,6 +1,9 @@
 package com.example.catapi.ui
 
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.catapi.model.Cat
 import com.example.catapi.repository.CatsRepository
 import kotlinx.coroutines.launch

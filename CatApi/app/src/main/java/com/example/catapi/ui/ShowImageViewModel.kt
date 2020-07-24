@@ -15,7 +15,7 @@ import com.example.catapi.App
 import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
-
+import java.io.IOException
 
 class ShowImageViewModel : ViewModel() {
 
@@ -47,7 +47,9 @@ class ShowImageViewModel : ViewModel() {
 
             try {
                 val rootPath =
-                    Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_PICTURES).absolutePath + "/PicturesCatApi/"
+                    Environment.getExternalStoragePublicDirectory(
+                        Environment.DIRECTORY_PICTURES
+                    ).absolutePath + "/PicturesCatApi/"
 
                 val root = File(rootPath)
 
@@ -68,7 +70,7 @@ class ShowImageViewModel : ViewModel() {
                 val bitmap = image.value
                 val outputStream = FileOutputStream(file)
 
-                bitmap?.compress(Bitmap.CompressFormat.JPEG, 50, outputStream)
+                bitmap?.compress(Bitmap.CompressFormat.JPEG, QUALITY, outputStream)
                 outputStream.close()
 
                 MediaScannerConnection.scanFile(
@@ -77,11 +79,15 @@ class ShowImageViewModel : ViewModel() {
                     null,
                     null
                 )
-            } catch (exc: Exception) {
+            } catch (exc: IOException) {
                 exc.printStackTrace()
             }
             _isSave.value = true
             Log.i("tag", "saved")
         }
+    }
+
+    companion object {
+        private const val QUALITY = 100
     }
 }

@@ -7,8 +7,7 @@ import androidx.recyclerview.widget.ListAdapter
 import com.example.catapi.R
 import com.example.catapi.model.Cat
 
-
-class CatAdapter(private val onCatSelected:(cat: Cat) -> Unit) : ListAdapter<Cat, CatViewHolder>(catDiffUtilCallback) {
+class CatAdapter(private val onCatSelected: (cat: Cat) -> Unit) : ListAdapter<Cat, CatViewHolder>(catDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatViewHolder {
         val view = LayoutInflater.from(parent.context)
@@ -39,5 +38,3 @@ class CatAdapter(private val onCatSelected:(cat: Cat) -> Unit) : ListAdapter<Cat
         }
     }
 }
-
-

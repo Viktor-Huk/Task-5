@@ -12,7 +12,6 @@ import com.example.catapi.databinding.ActivityMainBinding
 import com.example.catapi.model.Cat
 import com.example.catapi.ui.adapter.CatAdapter
 
-
 class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<MainViewModel>()
@@ -49,7 +48,6 @@ class MainActivity : AppCompatActivity() {
                         saveCurrentState = currentFirstVisible
                         viewModel.loadCats()
                     }
-
                 } else if ((saveCurrentState + 1) == currentFirstVisible) {
                     loading = true
                 }
@@ -80,5 +78,3 @@ class MainActivity : AppCompatActivity() {
         const val CAT_ID = "cat_id"
     }
 }
-
-
