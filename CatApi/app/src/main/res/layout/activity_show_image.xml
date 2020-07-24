@@ -6,13 +6,24 @@
     android:layout_height="match_parent"
     tools:context=".ui.ShowImageActivity">
 
-    <ImageView
-        android:id="@+id/full_image_view"
+    <androidx.appcompat.widget.Toolbar
+        android:id="@+id/showActivityToolBar"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        app:layout_constraintBottom_toBottomOf="parent"
+        android:layout_height="?attr/actionBarSize"
+        app:title="@string/cat"
+        android:background="@color/colorAccent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
+
+    <ImageView
+        android:id="@+id/full_image_view"
+        android:layout_width="match_parent"
+        android:layout_height="0dp"
+        android:scaleType="fitCenter"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/showActivityToolBar" />
 
 </androidx.constraintlayout.widget.ConstraintLayout>

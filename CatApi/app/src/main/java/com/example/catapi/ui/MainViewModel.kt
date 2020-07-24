@@ -8,12 +8,14 @@ import kotlinx.coroutines.launch
 class MainViewModel : ViewModel() {
 
     private val catsRepository = CatsRepository()
+
     private val _data = MutableLiveData<List<Cat>>()
 
     val data: LiveData<List<Cat>> = _data
 
     fun getCats() {
         viewModelScope.launch {
+
             val cats = catsRepository.getCats()
             _data.value = cats
         }

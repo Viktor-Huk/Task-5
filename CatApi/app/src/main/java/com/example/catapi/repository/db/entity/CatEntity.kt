@@ -12,16 +12,16 @@ data class CatEntity(
     val id: String,
 
     @ColumnInfo(name = "url")
-    val url: String
+    val url: String,
+
+    @ColumnInfo(name = "width")
+    val width: Int,
+
+    @ColumnInfo(name = "height")
+    val height: Int
 ) {
 
-    fun entityToCat(): Cat {
-        return Cat(id, url)
-    }
+    constructor(cat: Cat) : this(cat.id, cat.url, cat.width, cat.height)
 
-    companion object {
-        fun catToEntity(cat: Cat): CatEntity {
-            return CatEntity(cat.id, cat.url)
-        }
-    }
+    fun entityToCat() = Cat(id, url, width, height)
 }

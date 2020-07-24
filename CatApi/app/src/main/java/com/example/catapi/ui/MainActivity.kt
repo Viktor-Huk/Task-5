@@ -2,7 +2,6 @@ package com.example.catapi.ui
 
 import android.content.Intent
 import android.os.Bundle
-import android.util.Log
 import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
@@ -14,13 +13,11 @@ import com.example.catapi.model.Cat
 import com.example.catapi.ui.adapter.CatAdapter
 
 
-class MainActivity : AppCompatActivity(), CatAdapter.ItemClickListener {
+class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<MainViewModel>()
     private lateinit var binding: ActivityMainBinding
-    private val catAdapter = CatAdapter(this)
-    private lateinit var recyclerView: RecyclerView
-    private lateinit var myLayoutManager: LinearLayoutManager
+    private val catAdapter = CatAdapter((::openImage)())
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,14 +25,13 @@ class MainActivity : AppCompatActivity(), CatAdapter.ItemClickListener {
         setContentView(binding.root)
         setSupportActionBar(binding.mainToolBar)
 
-        recyclerView = binding.mainRecyclerView
+        val recyclerView = binding.mainRecyclerView
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = catAdapter
 
-        myLayoutManager = recyclerView.layoutManager as LinearLayoutManager
-
         recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
 
+            val myLayoutManager = recyclerView.layoutManager as LinearLayoutManager
             var loading = true
             var saveCurrentState = 1
 
@@ -66,10 +62,11 @@ class MainActivity : AppCompatActivity(), CatAdapter.ItemClickListener {
         viewModel.getCats()
     }
 
-    private fun openView(cat: Cat) {
+    private fun openImage(): (Cat) -> Unit = { cat ->
         val intent = Intent(this, ShowImageActivity::class.java)
 
-        intent.putExtra(Intent.EXTRA_TEXT, cat.url)
+        intent.putExtra(CAT_URL, cat.url)
+        intent.putExtra(CAT_ID, cat.id)
 
         if (intent.resolveActivity(packageManager) != null) {
             startActivity(intent)
@@ -78,11 +75,10 @@ class MainActivity : AppCompatActivity(), CatAdapter.ItemClickListener {
         overridePendingTransition(R.anim.fade_in, R.anim.fade_out)
     }
 
-    override fun onItemClick(position: Int) {
-        val list = (recyclerView.adapter as CatAdapter).currentList
-        val cat = list[position]
-        openView(cat)
-
-        Log.i("tag", "click")
+    companion object {
+        const val CAT_URL = "cat_url"
+        const val CAT_ID = "cat_id"
     }
 }
+
+

@@ -8,22 +8,21 @@ import com.example.catapi.R
 import com.example.catapi.model.Cat
 
 
-class CatAdapter(private val itemClickListener: ItemClickListener) : ListAdapter<Cat, CatViewHolder>(catDiffUtilCallback) {
+class CatAdapter(private val onCatSelected:(cat: Cat) -> Unit) : ListAdapter<Cat, CatViewHolder>(catDiffUtilCallback) {
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): CatViewHolder {
         val view = LayoutInflater.from(parent.context)
             .inflate(R.layout.item_view_cat, parent, false)
-
         return CatViewHolder(view)
     }
 
     override fun onBindViewHolder(holder: CatViewHolder, position: Int) {
         val cat = getItem(position)
-        holder.bind(cat)
 
         holder.catImageView.setOnClickListener {
-            itemClickListener.onItemClick(position)
+            onCatSelected(getItem(position))
         }
+        holder.bind(cat)
     }
 
     companion object {
@@ -37,12 +36,7 @@ class CatAdapter(private val itemClickListener: ItemClickListener) : ListAdapter
             override fun areContentsTheSame(oldItem: Cat, newItem: Cat): Boolean {
                 return oldItem == newItem
             }
-
         }
-    }
-
-    interface ItemClickListener {
-        fun onItemClick(position: Int)
     }
 }
 
