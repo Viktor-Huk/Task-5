@@ -6,17 +6,19 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.example.catapi.R
 import com.example.catapi.databinding.ActivityMainBinding
 import com.example.catapi.model.Cat
 import com.example.catapi.ui.adapter.CatAdapter
+import com.paginate.Paginate
 
 class MainActivity : AppCompatActivity() {
 
     private val viewModel by viewModels<MainViewModel>()
     private lateinit var binding: ActivityMainBinding
     private val catAdapter = CatAdapter((::openImage)())
+    private var loading = false
+    private var loadedAllItems = true
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -28,35 +30,37 @@ class MainActivity : AppCompatActivity() {
         recyclerView.layoutManager = LinearLayoutManager(this)
         recyclerView.adapter = catAdapter
 
-        recyclerView.addOnScrollListener(object : RecyclerView.OnScrollListener() {
-
-            val myLayoutManager = recyclerView.layoutManager as LinearLayoutManager
-            var loading = true
-            var saveCurrentState = 1
-
-            override fun onScrolled(recyclerView: RecyclerView, dx: Int, dy: Int) {
-                super.onScrolled(recyclerView, dx, dy)
-
-                val currentFirstVisible = myLayoutManager.findFirstVisibleItemPosition()
-                val itemCount = myLayoutManager.itemCount
-                val r = myLayoutManager.childCount
-
-                if (loading) {
-
-                    if ((r + currentFirstVisible) >= itemCount) {
-                        loading = false
-                        saveCurrentState = currentFirstVisible
-                        viewModel.loadCats()
-                    }
-                } else if ((saveCurrentState + 1) == currentFirstVisible) {
-                    loading = true
-                }
-            }
-        })
-
         viewModel.data.observe(this, Observer {
             catAdapter.submitList(it)
+            loadedAllItems = false
+            loading = false
         })
+
+        val callbacks = object : Paginate.Callbacks {
+            override fun onLoadMore() {
+                // Load next page of data (e.g. network or database)
+                loading = true
+                loadedAllItems = true
+                viewModel.loadCats()
+            }
+
+            override fun isLoading(): Boolean {
+                // Indicate whether new page loading is in progress or not
+                return loading
+            }
+
+            override fun hasLoadedAllItems(): Boolean {
+                // Indicate whether all data (pages) are loaded or not
+                return loadedAllItems
+            }
+        }
+
+        Paginate
+            .with(recyclerView, callbacks)
+            .setLoadingTriggerThreshold(1)
+            .addLoadingListItem(true)
+            .build()
+
         viewModel.getCats()
     }
 
