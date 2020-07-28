@@ -13,11 +13,12 @@ import androidx.lifecycle.viewModelScope
 import coil.ImageLoader
 import coil.request.LoadRequest
 import com.example.catapi.App
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.io.File
-import java.io.FileOutputStream
 import java.io.IOException
 import java.io.OutputStream
+import java.io.FileOutputStream as FileOutputStream1
 
 class ShowImageViewModel : ViewModel() {
 
@@ -45,7 +46,7 @@ class ShowImageViewModel : ViewModel() {
     }
 
     fun saveImage(catId: String) {
-        viewModelScope.launch {
+        viewModelScope.launch(Dispatchers.IO) {
 
             try {
 
@@ -84,7 +85,7 @@ class ShowImageViewModel : ViewModel() {
                         file.mkdir()
                     }
                     val image = File(imagesDir, fileName)
-                    write(FileOutputStream(image))
+                    write(FileOutputStream1(image))
                 }
             } catch (exc: IOException) {
                 exc.printStackTrace()
