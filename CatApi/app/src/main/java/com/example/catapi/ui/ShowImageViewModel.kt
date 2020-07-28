@@ -46,7 +46,7 @@ class ShowImageViewModel : ViewModel() {
     }
 
     fun saveImage(catId: String) {
-        viewModelScope.launch(Dispatchers.IO) {
+        viewModelScope.launch {
 
             try {
 
