@@ -1,10 +1,11 @@
 package com.example.catapi.ui
 
+import android.content.ContentValues
 import android.graphics.Bitmap
 import android.graphics.drawable.BitmapDrawable
-import android.media.MediaScannerConnection
+import android.os.Build
 import android.os.Environment
-import android.util.Log
+import android.provider.MediaStore
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -16,6 +17,7 @@ import kotlinx.coroutines.launch
 import java.io.File
 import java.io.FileOutputStream
 import java.io.IOException
+import java.io.OutputStream
 
 class ShowImageViewModel : ViewModel() {
 
@@ -46,48 +48,53 @@ class ShowImageViewModel : ViewModel() {
         viewModelScope.launch {
 
             try {
-                val rootPath =
-                    Environment.getExternalStoragePublicDirectory(
-                        Environment.DIRECTORY_PICTURES
-                    ).absolutePath + "/PicturesCatApi/"
 
-                val root = File(rootPath)
-
-                if (!root.exists()) {
-                    root.mkdirs()
-                }
+                val bitmap = image.value
 
                 val fileName = "JPEG_$catId.jpg"
 
-                val file = File(root.absolutePath, fileName)
-
-                if (file.exists()) {
-                    file.delete()
+                val write: (OutputStream) -> Boolean? = {
+                    bitmap?.compress(Bitmap.CompressFormat.JPEG, QUALITY, it)
                 }
 
-                file.createNewFile()
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.Q) {
 
-                val bitmap = image.value
-                val outputStream = FileOutputStream(file)
+                    val contentValues = ContentValues().apply {
+                        put(MediaStore.MediaColumns.DISPLAY_NAME, fileName)
+                        put(MediaStore.MediaColumns.MIME_TYPE, "image/jpeg")
+                        put(
+                            MediaStore.MediaColumns.RELATIVE_PATH,
+                            "${Environment.DIRECTORY_DCIM}$ALBUM_NAME"
+                        )
+                    }
 
-                bitmap?.compress(Bitmap.CompressFormat.JPEG, QUALITY, outputStream)
-                outputStream.close()
+                    App.INSTANCE.contentResolver.let {
+                        it.insert(MediaStore.Images.Media.EXTERNAL_CONTENT_URI, contentValues)
+                            ?.let { uri ->
+                                it.openOutputStream(uri)?.let(write)
+                            }
+                    }
+                } else {
 
-                MediaScannerConnection.scanFile(
-                    App.INSTANCE,
-                    arrayOf(file.absolutePath),
-                    null,
-                    null
-                )
+                    val imagesDir =
+                        Environment.getExternalStoragePublicDirectory(Environment.DIRECTORY_DCIM)
+                            .toString() + ALBUM_NAME
+                    val file = File(imagesDir)
+                    if (!file.exists()) {
+                        file.mkdir()
+                    }
+                    val image = File(imagesDir, fileName)
+                    write(FileOutputStream(image))
+                }
             } catch (exc: IOException) {
                 exc.printStackTrace()
             }
             _isSave.value = true
-            Log.i("tag", "saved")
         }
     }
 
     companion object {
         private const val QUALITY = 100
+        private const val ALBUM_NAME = "/cats"
     }
 }

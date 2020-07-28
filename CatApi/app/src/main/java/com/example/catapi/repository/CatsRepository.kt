@@ -1,4 +1,5 @@
 package com.example.catapi.repository
+
 import com.example.catapi.model.Cat
 import com.example.catapi.repository.db.DatabaseManager
 import com.example.catapi.repository.db.entity.CatEntity
